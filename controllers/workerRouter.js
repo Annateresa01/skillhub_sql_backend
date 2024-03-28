@@ -1,53 +1,37 @@
 const express=require("express")
-const userModel=require("../models/userModel")
-const bcrypt = require("bcryptjs")
+const workerModel=require("../models/workerModel")
 
 const router = express.Router()
 
 
-hashPasswordgenerator = async (pass) => {
-    const salt = await bcrypt.genSalt(10)
-    return bcrypt.hash(pass, salt)
-}
-
-
 router.post('/signup', async (req, res) => {
     let { data } = { "data": req.body }
-    userModel.insertUser(req.body, (error, results) => {
+    workerModel.insertworker(req.body, (error, results) => {
         if (error) {
             res.status(500).send('Error inserting user data' + error)
             return
         }
-        res.status(201).send('User added with ID')
+        res.status(201).send('Worker added with ID')
     })
 })
 
-router.get('/viewusers', (req, res) => {
-    userModel.viewUsers((error, results) => {
-        if (error) {
-            res.status(500).send('Error fetching users:' + error)
-            return
-        }
-        res.status(200).json(results);
-    })
-})
 
-router.post('/loginuser', (req, res) => {
-    const { user_email, user_pass } = req.body;
+router.post('/loginworker', (req, res) => {
+    const { worker_emailid, worker_password } = req.body;
 
-    userModel.userLogin(user_email, (error, user) => { 
+    workerModel.workerLogin(worker_emailid, (error, worker) => { 
         if (error) {
             return res.json({
                 status: "Error"
             });
         }
-        if (!user) {
+        if (!worker) {
             return res.json({
                 status: "Invalid Email ID"
             });
         }
         // Compare the password retrieved from the database with the provided password
-        if (user.user_pass !== user_pass) {
+        if (worker.worker_password !== worker_password) {
             return res.json({
                 status: "Invalid Password"
             });
@@ -55,7 +39,7 @@ router.post('/loginuser', (req, res) => {
         // Successful login
         return res.json({
             status: "Success",
-            userData: user
+            workerData: worker
         });
     });
 });

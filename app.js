@@ -2,6 +2,8 @@ const express=require("express")
 const mysql=require("mysql")
 const cors=require("cors")
 const userRouter=require("./controllers/userRouter")
+const workerRouter=require("./controllers/workerRouter")
+const adminRouter=require("./controllers/adminRouter")
 
 
 const app=express()
@@ -11,6 +13,8 @@ app.use(express.json())
 app.use(cors())
 
 app.use("/api/user",userRouter)
+app.use("/api/worker",workerRouter)
+app.use("/api/admin",adminRouter)
 
 
 
